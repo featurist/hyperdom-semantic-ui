@@ -53,6 +53,13 @@ plastiq.append(document.body, render, {});
 ## tab
 
 ```JavaScript
+semanticUi.tab([options], vdom);
+```
+
+* `options` - options passed to `$(element).find('.item').tab(options)`.
+* `vdom` - contents of the modal, should contain several `.item` elements.
+
+```JavaScript
 var plastiq = require('plastiq');
 var h = plastiq.html;
 var semanticUi = require('.');
@@ -76,10 +83,3 @@ function render(model) {
 
 plastiq.append(document.body, render, {});
 ```
-
-```JavaScript
-semanticUi.tab(options, vdom);
-```
-
-* `options` - options passed to `$(element).find('.item').tab(options)`.
-* `vdom` - contents of the modal, should contain several `.item` elements.
