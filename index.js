@@ -41,7 +41,7 @@ exports.modal = function modal(options, vdom) {
   );
 };
 
-exports.tab = function tab(options, vdom) {
+exports.tabs = function tabs(options, vdom) {
   if (options.prototype !== Object) {
     vdom = options;
     options = undefined;

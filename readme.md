@@ -53,7 +53,7 @@ plastiq.append(document.body, render, {});
 ## tab
 
 ```JavaScript
-semanticUi.tab([options], vdom);
+semanticUi.tabs([options], vdom);
 ```
 
 * `options` - options passed to `$(element).find('.item').tab(options)`.
@@ -68,7 +68,7 @@ function render(model) {
   var refresh = h.refresh;
 
   return h('div',
-    semanticUi.tab(
+    semanticUi.tabs(
       h('.ui.top.attached.tabular.menu',
         h('a.item.active', {dataset: {tab: 'first'}}, 'First'),
         h('a.item', {dataset: {tab: 'second'}}, 'Second'),
