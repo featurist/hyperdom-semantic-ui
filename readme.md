@@ -1,5 +1,15 @@
 # Semantic-UI components for plastiq
 
+These are some simple wrappers for using Semantic UI with Plastiq.
+
+For the most part they're not very clever, and by this I mean:
+
+  * you are still required to generate the HTML (or virtual-DOM) required to make Semantic UI work.
+  * they don't necessarily update Semantic UI with HTML changes, for example, if your virtual-DOM adds a new tab, it won't make it known to Semantic UI.
+  * Events, such as tab selection, aren't bound onto your model, as you might expect in a framework more idiomatic to plastiq.
+
+Nevertheless, this isn't by design, so if you find something that you wish was a bit more clever, please send a pull request.
+
 ```bash
 npm install plastiq-semantic-ui
 ```
@@ -16,7 +26,7 @@ semanticUi.modal(options, vdom);
 ```JavaScript
 var plastiq = require('plastiq');
 var h = plastiq.html;
-var semanticUi = require('.');
+var semanticUi = require('plastiq-semantic-ui');
 
 function render(model) {
   var refresh = h.refresh;
@@ -62,7 +72,7 @@ semanticUi.tabs([options], vdom);
 ```JavaScript
 var plastiq = require('plastiq');
 var h = plastiq.html;
-var semanticUi = require('.');
+var semanticUi = require('plastiq-semantic-ui');
 
 function render(model) {
   var refresh = h.refresh;
