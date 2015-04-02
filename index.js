@@ -41,8 +41,12 @@ exports.modal = function modal(options, vdom) {
   );
 };
 
+function isPlainObject(o) {
+  return o.constructor === Object;
+}
+
 exports.tabs = function tabs(options, vdom) {
-  if (options.prototype !== Object) {
+  if (!isPlainObject(options)) {
     vdom = options;
     options = undefined;
   }
@@ -60,6 +64,34 @@ exports.tabs = function tabs(options, vdom) {
         } else {
           items.tab();
         }
+      }
+    },
+    vdom
+  );
+};
+
+exports.dropdown = function (options, vdom) {
+  if (!isPlainObject(options)) {
+    vdom = options;
+    options = undefined;
+  }
+
+  if (options) {
+    options = refreshifyObject(options);
+  }
+
+  return h.component(
+    {
+      onadd: function (element) {
+        this.element = $(element);
+        if (options) {
+          this.element.dropdown(options);
+        } else {
+          this.element.dropdown();
+        }
+      },
+      onupdate: function () {
+        this.element.dropdown('refresh');
       }
     },
     vdom
