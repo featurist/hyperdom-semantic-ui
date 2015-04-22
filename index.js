@@ -45,29 +45,72 @@ function isPlainObject(o) {
   return o.constructor === Object;
 }
 
-exports.tabs = function tabs(options, vdom) {
-  if (!isPlainObject(options)) {
+exports.tabs = function tabs(selector, options, vdom) {
+  if (typeof(selector) == 'string') {
+    var binding = plastiq.binding(options.binding);
+    
+    var activeKey = binding.get();
+    if (!activeKey) {
+      activeKey = options.tabs[0].key;
+      binding.set(activeKey);
+    }
+
+    var activeTab = options.tabs.filter(function (tab) { return tab.key == activeKey; })[0];
+
+    if (!activeTab) {
+      activeTab = options.tabs[0];
+      activeKey = activeTab.key;
+    }
+
+    var content = activeTab.content(activeKey);
+    content.properties.className += ' active';
+    content.key = 'content';
+
+    return h('div',
+      h(selector, {key: 'tabs'},
+        options.tabs.map(function (tab) {
+          var tabTitle = tab.tab;
+
+          if (activeKey == tab.key) {
+            tabTitle.properties.className += ' active';
+          }
+
+          tabTitle.properties.onclick = function () {
+            binding.set(tab.key);
+          };
+
+          return tabTitle;
+        })
+      ),
+      content
+    );
+  } else {
+    options = selector;
     vdom = options;
-    options = undefined;
-  }
 
-  if (options) {
-    options = refreshifyObject(options);
-  }
+    if (!isPlainObject(options)) {
+      vdom = options;
+      options = undefined;
+    }
 
-  return h.component(
-    {
-      onadd: function (element) {
-        var items = $(element).find('.item');
-        if (options) {
-          items.tab(options);
-        } else {
-          items.tab();
+    if (options) {
+      options = refreshifyObject(options);
+    }
+
+    return h.component(
+      {
+        onadd: function (element) {
+          var items = $(element).find('.item');
+          if (options) {
+            items.tab(options);
+          } else {
+            items.tab();
+          }
         }
-      }
-    },
-    vdom
-  );
+      },
+      vdom
+    );
+  }
 };
 
 exports.dropdown = function (options, vdom) {
