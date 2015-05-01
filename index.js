@@ -140,3 +140,50 @@ exports.dropdown = function (options, vdom) {
     vdom
   );
 };
+
+exports.checkbox = function (options, vdom) {
+  var binding = h.binding(options.binding);
+
+  return h.component(
+    {
+      binding: binding,
+
+      onadd: function (element) {
+        var self = this;
+        var $element = $(element);
+
+        $element.checkbox().on('click', function () {
+          self.checked = $(this).checkbox('is checked');
+          self.binding.set(self.checked);
+        });
+
+        this.checked = !!this.binding.get();
+        if (this.checked) {
+          $element.checkbox('check');
+        }
+      },
+
+      onupdate: function (element) {
+        var checked = !!this.binding.get();
+        if (checked != this.checked) {
+          this.checked = checked;
+          $(element).checkbox(checked? 'check': 'uncheck');
+        }
+      }
+    },
+    vdom
+  );
+};
+
+exports.search = function(options, vdom) {
+  options = refreshifyObject(options);
+
+  return h.component(
+    {
+      onadd: function (element) {
+        $(element).search(options);
+      }
+    },
+    vdom
+  );
+};

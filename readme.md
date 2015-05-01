@@ -2,13 +2,9 @@
 
 These are some simple wrappers for using Semantic UI with Plastiq.
 
-For the most part they're not very clever, and by this I mean:
+For the most part they're very simple - only calling the corresponding JS to setup the components, they still require you to generate the HTML for the presentation.
 
-  * you are still required to generate the HTML (or virtual-DOM) required to make Semantic UI work.
-  * they don't necessarily update Semantic UI with HTML changes, for example, if your virtual-DOM adds a new tab, it won't make it known to Semantic UI.
-  * Events, such as tab selection, aren't bound onto your model, as you might expect in a framework more idiomatic to plastiq.
-
-Nevertheless, this isn't by design, so if you find something that you wish was a bit more clever, please send a pull request.
+Components are written on an as-needed basis, so if you see one missing, please make a pull request.
 
 ```bash
 npm install plastiq-semantic-ui
@@ -60,7 +56,9 @@ function render(model) {
 plastiq.append(document.body, render, {});
 ```
 
-## tab
+## tab (unbound)
+
+There are two forms of the tab control, this one doesn't bind the selected tab to the model, and renders _all_ of the tabs, even if they're not shown.
 
 ```JavaScript
 semanticUi.tabs([options], vdom);
@@ -92,4 +90,68 @@ function render(model) {
 }
 
 plastiq.append(document.body, render, {});
+```
+
+## tab (bound)
+
+There are two forms of the tab control, this one binds the selected tab to the model, and only renders the tab that is actually shown.
+
+```js
+semanticUi.tabs(
+  '.ui.tabular.menu',
+  {
+    binding: [model, 'selectedTab'],
+    tabs: [
+      {
+        key: 'first',
+        tab: h('a.item', 'First'),
+        content: function () {
+          return h('First Content');
+        }
+      },
+      {
+        key: 'second',
+        tab: h('a.item', 'Second'),
+        content: function () {
+          return h('Second Content');
+        }
+      },
+      {
+        key: 'third',
+        tab: h('a.item', 'Third'),
+        content: function () {
+          return h('Third Content');
+        }
+      }
+    ]
+  }
+)
+```
+
+## checkbox
+
+```js
+semanticui.checkbox({binding: [model, 'property'},
+  h('.ui.toggle.checkbox',
+    h('input', {type: 'checkbox'}),
+    h('label', label)
+  )
+)
+```
+
+## search
+
+```js
+semanticUi.search(
+  {
+    // search options, passed to $(element).search(options);
+  },
+  h('.ui.search',
+    h('.ui.icon.input',
+      h('input.prompt', {type: 'text', placeholder: 'search'}),
+      h('i.search.icon')
+    ),
+    h('.results')
+  )
+)
 ```
