@@ -187,3 +187,54 @@ exports.search = function(options, vdom) {
     vdom
   );
 };
+
+exports.form = function (options, settings, vdom) {
+  if (!vdom) {
+    vdom = settings;
+    settings = undefined;
+  }
+
+  return h.component(
+    {
+      settings: settings,
+
+      onadd: function (element) {
+        var self = this;
+
+        var callbacks = {
+          onSuccess: function () {
+            if (self.settings.onSuccess) {
+              self.settings.onSuccess.apply(self.settings, arguments);
+            }
+          },
+          onFailure: function () {
+            if (self.settings.onFailure) {
+              self.settings.onFailure.apply(self.settings, arguments);
+            }
+          },
+          onValid: function () {
+            if (self.settings.onValid) {
+              self.settings.onValid.apply(self.settings, arguments);
+            }
+          },
+          onInvalid: function () {
+            if(self.settings.onInvalid) {
+              self.settings.onInvalid.apply(self.settings, arguments);
+            }
+          }
+        };
+
+        this.formElement = $(element).form(options, extend(settings, callbacks));
+      }
+    },
+    vdom
+  );
+};
+
+function extend(object, extension) {
+  Object.keys(extension).forEach(function (key) {
+    object[key] = extension[key];
+  });
+
+  return object;
+}
