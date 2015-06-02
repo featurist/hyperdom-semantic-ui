@@ -188,14 +188,18 @@ exports.search = function(options, vdom) {
   );
 };
 
-exports.form = function (options, settings, vdom) {
+exports.form = function (options, vdom) {
   if (!vdom) {
-    vdom = settings;
-    settings = undefined;
+    vdom = options;
+    options = undefined;
   }
+
+  var settings = options && options.hasOwnProperty('settings')? options.settings: {};
+  var rules = options && options.hasOwnProperty('rules')? options.rules: undefined;
 
   return h.component(
     {
+      key: options.key,
       settings: settings,
 
       onadd: function (element) {
@@ -206,25 +210,47 @@ exports.form = function (options, settings, vdom) {
             if (self.settings.onSuccess) {
               self.settings.onSuccess.apply(self.settings, arguments);
             }
+            return self.onSuccess.apply(self, arguments);
           },
+
           onFailure: function () {
             if (self.settings.onFailure) {
               self.settings.onFailure.apply(self.settings, arguments);
             }
-          },
-          onValid: function () {
-            if (self.settings.onValid) {
-              self.settings.onValid.apply(self.settings, arguments);
-            }
-          },
-          onInvalid: function () {
-            if(self.settings.onInvalid) {
-              self.settings.onInvalid.apply(self.settings, arguments);
-            }
+            return self.onFailure.apply(self, arguments);
           }
         };
 
-        this.formElement = $(element).form(options, extend(settings, callbacks));
+        this.createValidationPromise();
+
+        this.formElement = $(element).form(rules, extend(callbacks, settings));
+      },
+
+      onupdate: function () {
+        this.createValidationPromise();
+      },
+
+      createValidationPromise: function () {
+        if (!this.validationPromise) {
+          var self = this;
+          this.validationPromise = new Promise(function (fulfil, reject) {
+            self.onSuccess = fulfil;
+            self.onFailure = reject;
+          });
+        }
+      },
+
+      validate: function () {
+        var self = this;
+
+        this.validationPromise.then(function () {
+          delete self.validationPromise;
+        }, function () {
+          delete self.validationPromise;
+        });
+
+        this.formElement.form('validate form');
+        return this.validationPromise;
       }
     },
     vdom
@@ -237,4 +263,25 @@ function extend(object, extension) {
   });
 
   return object;
+}
+
+function settingsWithLatestCallbacks(componentState, settings) {
+  function callback(name) {
+    // always call the latest callback, not the one registered
+    // when the compnent was first added.
+    callbacks[name] = function () {
+      if (componentState.settings[name]) {
+        componentState.settings[name].apply(self.settings, arguments);
+      }
+    }
+  }
+
+  var callbacks = {};
+
+  callback('onSuccess');
+  callback('onFailure');
+  callback('onValid');
+  callback('onInvalid');
+
+  return extend(settings, callbacks);
 }

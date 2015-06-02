@@ -155,3 +155,50 @@ semanticUi.search(
   )
 )
 ```
+
+## form validation
+
+```js
+function save(form) {
+  return form.validate().then(function () {
+    return http.put(user.href, user);
+  });
+}
+
+semanticUi.form(
+  {
+    key: user.id,
+    rules: {
+      email: {
+        identifier: 'email',
+        rules: [{
+          type: 'email',
+          prompt: 'please enter a valid email address'
+        }]
+      }
+    },
+    settings: {
+      inline : true
+    }
+  },
+  function (component) {
+    return h('form.ui.form',
+      h('.field',
+        h('label', 'Email'),
+        h('input', {type: 'text', binding: [user, 'email'], placeholder: 'Email', name: 'email'})
+      ),
+      h('.ui.button', {onclick: function () { return save(component.state); }}, 'save')
+    );
+  }
+);
+```
+
+```js
+var vdom = semanticUi.form([options], vdom | function (component) { return vdom; });
+```
+
+* `options.rules` - semantic UI [validation rules](http://semantic-ui.com/behaviors/form.html#/usage)
+* `options.settings` - semantic UI [form settings](http://semantic-ui.com/behaviors/form.html#/settings)
+* `vdom` - vdom for the form
+* `vdomFunction` - function taking one argument, the component, and returning vdom for the form.
+* `component.state.validate()` - a function to run the validation rules, returns a promise.
