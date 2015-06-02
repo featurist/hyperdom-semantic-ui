@@ -203,9 +203,17 @@ exports.form = function (options, vdom) {
       settings: settings,
 
       onadd: function (element) {
+        this.formElement = $(element).form(rules, extend(this.validationCallbacks(), settings));
+      },
+
+      onupdate: function (element) {
+        this.formElement = $(element).form(rules, extend(this.validationCallbacks(), settings));
+      },
+
+      validationCallbacks: function () {
         var self = this;
 
-        var callbacks = {
+        return {
           onSuccess: function () {
             if (self.settings.onSuccess) {
               self.settings.onSuccess.apply(self.settings, arguments);
@@ -220,37 +228,26 @@ exports.form = function (options, vdom) {
             return self.onFailure.apply(self, arguments);
           }
         };
-
-        this.createValidationPromise();
-
-        this.formElement = $(element).form(rules, extend(callbacks, settings));
-      },
-
-      onupdate: function () {
-        this.createValidationPromise();
-      },
-
-      createValidationPromise: function () {
-        if (!this.validationPromise) {
-          var self = this;
-          this.validationPromise = new Promise(function (fulfil, reject) {
-            self.onSuccess = fulfil;
-            self.onFailure = reject;
-          });
-        }
       },
 
       validate: function () {
-        var self = this;
+        var success = false;
+        var failure = false;
+        var errors;
 
-        this.validationPromise.then(function () {
-          delete self.validationPromise;
-        }, function () {
-          delete self.validationPromise;
-        });
+        this.onSuccess = function () {
+          success = true;
+        };
+        this.onFailure = function (e) {
+          failure = true;
+          errors = e;
+        };
 
         this.formElement.form('validate form');
-        return this.validationPromise;
+
+        if (failure) {
+          return errors;
+        }
       }
     },
     vdom
