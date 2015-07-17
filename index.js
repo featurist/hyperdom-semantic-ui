@@ -66,7 +66,7 @@ exports.tabs = function tabs(selector, options, vdom) {
     content.properties.className += ' active';
     content.key = 'content';
 
-    return h('div',
+    return [
       h(selector, {key: 'tabs'},
         options.tabs.map(function (tab) {
           var tabTitle = tab.tab;
@@ -83,7 +83,7 @@ exports.tabs = function tabs(selector, options, vdom) {
         })
       ),
       content
-    );
+    ];
   } else {
     options = selector;
     vdom = options;
@@ -248,6 +248,19 @@ exports.form = function (options, vdom) {
         if (failure) {
           return errors;
         }
+      }
+    },
+    vdom
+  );
+};
+
+exports.popup = function (options, vdom) {
+  options = refreshifyObject(options);
+
+  return h.component(
+    {
+      onadd: function (element) {
+        $(element).popup(options);
       }
     },
     vdom

@@ -139,6 +139,24 @@ semanticui.checkbox({binding: [model, 'property'},
 )
 ```
 
+## dropdown
+
+```js
+semanticUi.dropdown(
+  {
+    // dropdown options, passed to $(element).dropdown(options);
+  },
+
+  h('.ui.button',
+    h('.ui.icon.input',
+      h('input.prompt', {type: 'text', placeholder: 'search'}),
+      h('i.search.icon')
+    ),
+    h('.results')
+  )
+)
+```
+
 ## search
 
 ```js
