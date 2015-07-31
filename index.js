@@ -28,12 +28,24 @@ exports.modal = function modal(options, vdom) {
     {
       detached: true,
       onadd: function (element) {
+        var self = this;
         this.modal = $(element);
+
+        var originalOnHide = options.onHide;
+        options.onHide = function () {
+          self.hiding = true;
+          if (originalOnHide) {
+            originalOnHide.call(this, arguments);
+          }
+        };
+
         this.modal.modal(options);
         this.modal.modal('show');
       },
       onremove: function (element) {
-        this.modal.modal('hide');
+        if (!this.hiding) {
+          this.modal.modal('hide');
+        }
         this.modal.remove();
       }
     },
