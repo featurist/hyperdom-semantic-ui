@@ -206,20 +206,24 @@ exports.form = function (options, vdom) {
     options = undefined;
   }
 
-  var settings = options && options.hasOwnProperty('settings')? options.settings: {};
-  var rules = options && options.hasOwnProperty('rules')? options.rules: undefined;
+  if (typeof vdom === 'function') {
+    var originalVdomFn = vdom;
+    vdom = function (component) {
+      return originalVdomFn(component.state);
+    };
+  }
 
   return h.component(
     {
       key: options.key,
-      settings: settings,
+      options: options,
 
       onadd: function (element) {
-        this.formElement = $(element).form(rules, extend(this.validationCallbacks(), settings));
+        this.formElement = $(element).form(extend(this.validationCallbacks(), options));
       },
 
       onupdate: function (element) {
-        this.formElement = $(element).form(rules, extend(this.validationCallbacks(), settings));
+        this.formElement = $(element).form(extend(this.validationCallbacks(), options));
       },
 
       validationCallbacks: function () {
@@ -227,15 +231,15 @@ exports.form = function (options, vdom) {
 
         return {
           onSuccess: function () {
-            if (self.settings.onSuccess) {
-              self.settings.onSuccess.apply(self.settings, arguments);
+            if (self.options.onSuccess) {
+              self.options.onSuccess.apply(self.options, arguments);
             }
             return self.onSuccess.apply(self, arguments);
           },
 
           onFailure: function () {
-            if (self.settings.onFailure) {
-              self.settings.onFailure.apply(self.settings, arguments);
+            if (self.options.onFailure) {
+              self.options.onFailure.apply(self.options, arguments);
             }
             return self.onFailure.apply(self, arguments);
           }

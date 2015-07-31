@@ -186,7 +186,7 @@ function save(form) {
 semanticUi.form(
   {
     key: user.id,
-    rules: {
+    fields: {
       email: {
         identifier: 'email',
         rules: [{
@@ -195,17 +195,15 @@ semanticUi.form(
         }]
       }
     },
-    settings: {
-      inline : true
-    }
+    inline : true
   },
-  function (component) {
+  function (form) {
     return h('form.ui.form',
       h('.field',
         h('label', 'Email'),
         h('input', {type: 'text', binding: [user, 'email'], placeholder: 'Email', name: 'email'})
       ),
-      h('.ui.button', {onclick: function () { return save(component.state); }}, 'save')
+      h('.ui.button', {onclick: function () { return save(form); }}, 'save')
     );
   }
 );
@@ -215,8 +213,7 @@ semanticUi.form(
 var vdom = semanticUi.form([options], vdom | function (component) { return vdom; });
 ```
 
-* `options.rules` - semantic UI [validation rules](http://semantic-ui.com/behaviors/form.html#/usage)
-* `options.settings` - semantic UI [form settings](http://semantic-ui.com/behaviors/form.html#/settings)
+* `options` - settings to be passed to `.form(settings)`
 * `vdom` - vdom for the form
-* `vdomFunction` - function taking one argument, the component, and returning vdom for the form.
-* `component.state.validate()` - a function to run the validation rules, returns a promise.
+* `vdomFunction` - function taking one argument, the form, and returning vdom for the form.
+* `form.validate()` - a function to run the validation rules, returns either `undefined` if the form is valid, or an array of errors. See [`onFailure`](http://semantic-ui.com/behaviors/form.html#/settings).
