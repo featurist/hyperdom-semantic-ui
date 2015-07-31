@@ -1,6 +1,6 @@
 {
   "name": "plastiq-semantic-ui",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "description": "semantic-ui components for plastiq",
   "main": "index.js",
   "scripts": {
