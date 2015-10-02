@@ -213,17 +213,27 @@ exports.form = function (options, vdom) {
     };
   }
 
+  var v1 = options && options.v1;
+
   return h.component(
     {
       key: options.key,
       options: options,
 
+      createFormElement: function (element) {
+        if (v1 && options && options.fields) {
+          this.formElement = $(element).form(options.fields, extend(this.validationCallbacks(), options));
+        } else {
+          this.formElement = $(element).form(extend(this.validationCallbacks(), options));
+        }
+      },
+
       onadd: function (element) {
-        this.formElement = $(element).form(extend(this.validationCallbacks(), options));
+        this.createFormElement(element);
       },
 
       onupdate: function (element) {
-        this.formElement = $(element).form(extend(this.validationCallbacks(), options));
+        this.createFormElement(element);
       },
 
       validationCallbacks: function () {

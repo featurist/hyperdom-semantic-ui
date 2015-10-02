@@ -214,6 +214,7 @@ var vdom = semanticUi.form([options], vdom | function (component) { return vdom;
 ```
 
 * `options` - settings to be passed to `.form(settings)`
+* `options.v1` - set this to true to use Semantic UI v1.x.x forms.
 * `vdom` - vdom for the form
 * `vdomFunction` - function taking one argument, the form, and returning vdom for the form.
 * `form.validate()` - a function to run the validation rules, returns either `undefined` if the form is valid, or an array of errors. See [`onFailure`](http://semantic-ui.com/behaviors/form.html#/settings).
