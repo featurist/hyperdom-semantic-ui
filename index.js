@@ -1,5 +1,5 @@
-var plastiq = require('plastiq');
-var h = plastiq.html;
+var hyperdom = require('hyperdom');
+var h = hyperdom.html;
 
 function mapObject(src, fn) {
   var dest = {};
@@ -59,8 +59,8 @@ function isPlainObject(o) {
 
 exports.tabs = function tabs(selector, options, vdom) {
   if (typeof(selector) == 'string') {
-    var binding = plastiq.binding(options.binding);
-    
+    var binding = hyperdom.binding(options.binding);
+
     var activeKey = binding.get();
     if (!activeKey) {
       activeKey = options.tabs[0].key;

@@ -1,13 +1,13 @@
-# Semantic-UI components for plastiq
+# Semantic-UI components for hyperdom
 
-These are some simple wrappers for using Semantic UI with Plastiq.
+These are some simple wrappers for using [Semantic UI](http://semantic-ui.com/) with [hyperdom](https://github.com/featurist/hyperdom).
 
 For the most part they're very simple - only calling the corresponding JS to setup the components, they still require you to generate the HTML for the presentation.
 
 Components are written on an as-needed basis, so if you see one missing, please make a pull request.
 
 ```bash
-npm install plastiq-semantic-ui
+npm install hyperdom-semantic-ui
 ```
 
 ## modal
@@ -20,9 +20,9 @@ semanticUi.modal(options, vdom);
 * `vdom` - contents of the modal.
 
 ```JavaScript
-var plastiq = require('plastiq');
-var h = plastiq.html;
-var semanticUi = require('plastiq-semantic-ui');
+var hyperdom = require('hyperdom');
+var h = hyperdom.html;
+var semanticUi = require('hyperdom-semantic-ui');
 
 function render(model) {
   var refresh = h.refresh;
@@ -53,7 +53,7 @@ function render(model) {
   );
 }
 
-plastiq.append(document.body, render, {});
+hyperdom.append(document.body, render, {});
 ```
 
 ## tab (unbound)
@@ -68,9 +68,9 @@ semanticUi.tabs([options], vdom);
 * `vdom` - contents of the modal, should contain several `.item` elements.
 
 ```JavaScript
-var plastiq = require('plastiq');
-var h = plastiq.html;
-var semanticUi = require('plastiq-semantic-ui');
+var hyperdom = require('hyperdom');
+var h = hyperdom.html;
+var semanticUi = require('hyperdom-semantic-ui');
 
 function render(model) {
   var refresh = h.refresh;
@@ -89,7 +89,7 @@ function render(model) {
   );
 }
 
-plastiq.append(document.body, render, {});
+hyperdom.append(document.body, render, {});
 ```
 
 ## tab (bound)
